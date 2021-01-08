@@ -5,6 +5,8 @@ import styled, { css } from 'styled-components';
 
 import history from '../history';
 
+/* This component will be responsible for displaying the home screen. In this screen there will be 3 options, a list of image based objects, objects stylized with CSS and objects from a third party library. */
+
 const useStyles = makeStyles((theme) => ({
   pageContainer: {
     backgroundColor: theme.palette.primary.white,
@@ -73,6 +75,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+//This is the info of the 3 options
 const options = [
   {
     name: 'Image Based',
@@ -159,15 +162,18 @@ const LandingPage = () => {
     switch (selectedOption) {
       case 'Image Based':
         titleOpt = 'Image Based';
-        infoOpt = 'Image Based';
+        infoOpt =
+          'Image Based Shape List, here you can use images to represent shapes!';
         break;
       case 'CSS Based':
         titleOpt = 'CSS Based';
-        infoOpt = 'CSS Based';
+        infoOpt =
+          'CSS Based Shape List, here you can use css styles to represent shapes!';
         break;
       case 'External Library Based':
         titleOpt = 'External Library Based';
-        infoOpt = 'External Library Based';
+        infoOpt =
+          'External Library Based Shape List, here you can use the shapes of React Shapes by rsamec to represent shapes!';
         break;
       default:
         break;
@@ -176,6 +182,7 @@ const LandingPage = () => {
     setInfo(infoOpt);
   };
 
+  //function to handle the animation and the selected option
   const handleOption = (option) => {
     if (!isOpen) {
       setSelectedOption(option);
@@ -192,6 +199,8 @@ const LandingPage = () => {
     }
   };
 
+  /* Here the 3 options will be rendered with the ability to expand to show more info if they are selected.
+  Each option will redirect to their respective list */
   const renderOptions = () => {
     return options.map(({ name, top, left, hoverColor }, index) => {
       return (

@@ -1,7 +1,18 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Card, CardContent, CardMedia, Grid } from '@material-ui/core';
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Grid,
+  IconButton,
+} from '@material-ui/core';
+import { Delete as DeleteIcon } from '@material-ui/icons';
 import { Rectangle, Circle, Ellipse, Line, Triangle } from 'react-shapes';
+
+/* 
+This component display a geometrical figure, the name of it and an option to delete the figure
+*/
 
 const useStyles = makeStyles((theme) => ({
   cardContainer: {
@@ -9,20 +20,36 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     borderRadius: 0,
     width: '100%',
-    '&:hover': {
-      backgroundColor: theme.palette.primary.main,
-      cursor: 'pointer',
+    flexDirection: 'column',
+    [theme.breakpoints.up('sm')]: {
+      flexDirection: 'row',
+    },
+  },
+  contentGrid: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  shape: {
+    margin: '2em 0',
+    [theme.breakpoints.up('sm')]: {
+      margin: '0',
     },
   },
   content: {
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
+    width: '100%',
+  },
+  selectable: {
+    '&:hover': {
+      cursor: 'pointer',
+    },
   },
   text: {
     maxWidth: '90%',
     textAlign: 'justify',
     margin: '4rem 0rem',
-    fontSize: '4vw',
+    fontSize: '5vw',
     [theme.breakpoints.up('sm')]: {
       maxWidth: '90%',
       fontSize: '3vw',
@@ -38,11 +65,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const FigureCard = ({ item, type }) => {
+const FigureCard = ({ item, type, handleDelete, handleOpen }) => {
   const classes = useStyles();
 
-  const renderShape = () => {
-    switch (item.name) {
+  /* 
+  According to the data of a figure this function will return a component that suits the criteria 
+ */
+  const renderLibShapes = () => {
+    switch (item.type) {
       case 'Rectangle':
         return (
           <Rectangle
@@ -110,20 +140,47 @@ const FigureCard = ({ item, type }) => {
 
   return (
     <Card className={classes.cardContainer}>
-      <Grid className={classes.content} item xs={6}>
-        <CardMedia>
-          {type === 'Image Based' ? (
-            <img src={item.imgUrl} height={item.height} alt={item.name} />
-          ) : type === 'CSS Based' ? (
-            <div style={item.style} />
-          ) : type === 'External Library Based' ? (
-            renderShape()
-          ) : null}
+      <Grid className={classes.contentGrid} item xs={6}>
+        {/* Geometrical figure section */}
+        <CardMedia
+          className={classes.selectable}
+          onClick={item.name !== 'no results found' ? handleOpen : null}
+        >
+          <div className={classes.shape}>
+            {type === 'Image Based' ? (
+              <img src={item.imgUrl} height={item.height} alt={item.name} />
+            ) : type === 'CSS Based' ? (
+              <div style={item.style} />
+            ) : (
+              renderLibShapes()
+            )}
+          </div>
         </CardMedia>
       </Grid>
-      <Grid className={classes.content} item xs={6}>
+      <Grid className={classes.contentGrid} item xs={6}>
         <CardContent className={classes.content}>
-          <h1 className={classes.text}>{item.name}</h1>
+          {/* Name figure section */}
+          <div
+            className={
+              item.name !== 'no results found' ? classes.selectable : null
+            }
+          >
+            <h1
+              onClick={item.name !== 'no results found' ? handleOpen : null}
+              className={classes.text}
+            >
+              {item.name}
+            </h1>
+          </div>
+          {/* Delete figure button */}
+          {item.name !== 'no results found' ? (
+            <IconButton
+              style={{ zIndex: 2, padding: '0' }}
+              onClick={handleDelete}
+            >
+              <DeleteIcon />
+            </IconButton>
+          ) : null}
         </CardContent>
       </Grid>
     </Card>
